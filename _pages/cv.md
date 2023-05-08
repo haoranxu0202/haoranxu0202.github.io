@@ -1,7 +1,7 @@
 ---
 layout: cv
 permalink: /cv/
-title: Resume
+title: cv
 nav: true
 nav_order: 3
 cv_pdf: Xu.Haoran.Resume.pdf
