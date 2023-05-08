@@ -120,9 +120,9 @@ Suppose the underlying data-generating process is Gaussian $$N(\mu,\sigma^2)$$. 
 
 Identifying breaks in stationarity is crucial, as any statistical analysis across non-stationary periods may be inaccurate. Detecting these breaks allows for improved predictive model efficacy by mitigating potential negative impacts.
 
-Our Stability Measure is therefore based on the concept of portfolio-specific stationarity, and determined by monitoring the temporal properties of the signal-to-noise ratio of a portfolio’s empirical correlation matrix, i.e. $$\Delta𝜈(𝑡)$$. It has implication in measuring of stability for the Minimum Variance portfolio over time and thereby helping researchers measure changes to estimation risk and manage rebalancing regimes.
+Our Stability Measure is therefore based on the concept of portfolio-specific stationarity, and determined by monitoring the temporal properties of the signal-to-noise ratio of a portfolio’s empirical correlation matrix, i.e. $$𝚫𝜈(𝑡)$$. It has implication in measuring of stability for the Minimum Variance portfolio over time and thereby helping researchers measure changes to estimation risk and manage rebalancing regimes.
 
-Smyth and Broby (2022) argue that a period of stationarity is typified by a distribution of $\Delta𝜈(𝑡)$ centred on zero and having a spread of typically ±5%.
+Smyth and Broby (2022) argue that a period of stationarity is typified by a distribution of $$𝚫𝜈(𝑡)$$ centred on zero and having a spread of typically ±5%.
 
 #### Periods of stationarity and breaks in stationarity over historical time 
 <div class="row">
@@ -162,7 +162,7 @@ Figure on the right illustrates the distribution of $$ν$$ for each index under 
 </div>
 Figure on the left provides a more detailed view by focusing on the S&P 400 index and selecting three regions of stationarity. Color-coding is employed to link the periods from the left to the right frames. It is instructive to examine the changes in $$ν$$ during each of the periods identified in this image.
 
-To this end, Figure on the right displays the distribution of the weekly percentage change in ν. For each of the regions identified as periods of stationarity, the modal weekly change is predominantly zero. Moreover, in each of these regions, the range of values is confined within ±4% (the green zone has a single anomalous daily value that can be identified as the spike in Figure on the left, causing the scale on the x-axis to broaden). The fourth frame of Figure on the right contains the distribution of values for all other regions combined. The mean weekly percentage change for all other regions is still zero, albeit less overwhelmingly so. Indeed, excluding the spike at zero for each frame results in values for the mean and variance of the distributions shown, which are twice as large for all other regions as for any of the color-coded regions, whose first and second moments are quite similar.
+To this end, Figure on the right displays the distribution of the weekly percentage change in $$ν$$. For each of the regions identified as periods of stationarity, the modal weekly change is predominantly zero. Moreover, in each of these regions, the range of values is confined within ±4% (the green zone has a single anomalous daily value that can be identified as the spike in Figure on the left, causing the scale on the x-axis to broaden). The fourth frame of Figure on the right contains the distribution of values for all other regions combined. The mean weekly percentage change for all other regions is still zero, albeit less overwhelmingly so. Indeed, excluding the spike at zero for each frame results in values for the mean and variance of the distributions shown, which are twice as large for all other regions as for any of the color-coded regions, whose first and second moments are quite similar.
 
 ## Conclusion
 
