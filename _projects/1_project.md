@@ -1,18 +1,26 @@
 ---
 layout: page
-title: "Graph Theory"
-description: Minimum Edge Compression of General Graphs (Allowing edges going into supernodes and nodes being overlapped)
-img: assets/img/12.jpg
+title: "Stability Measure for Minimum Variance Portfolios"
+description: Cornell University, School of Operations Research and Information Engineering
+img: assets/img/24.jpg
 importance: 1
 category: work
 ---
+## Stability Measure for MVPs leveraging Marchenko-Pastur Theory and Eigenvalue Distributions
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/25.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+The Minimum Variance portfolio exhibits varying levels of stability and robustness. As a result, we suggest a theoretical approach to assessing its stability in relation to a Marchenko-Pastur derived random correlation matrix. 
+
+This practical application is demonstrated using the S&P 400, the S&P 500, the S&P 600, and the Russell 1000. By analyzing historical market information from 2002 to 2021, we carry out an optimization process on the empirical correlation matrix eigenvalue distribution to establish the implied variance $$ν(t)$$ of the underlying data generation process. By tracking its temporal variation, $$Δν(t)$$, we present a Stability Measure for the Minimum Variance portfolio, thereby assisting researchers in evaluating shifts in estimation risk and managing rebalancing strategies.
 ## Introduction
+The Minimum Variance portfolio, which consists of assets with the lowest risk, is situated on the Efficient Frontier and was initially recognized by Haugen and Baker (1991). Numerous researchers have since investigated it (Merton 1980, Chopra and Ziemba 2013), noting that its construction is subject to sampling errors. Klein and Bawa (1976) emphasize that such estimation risk has significant implications for optimal portfolio selection, resulting in asset weights that are unstable and subject to noise over time. Nonetheless, the Minimum Variance portfolio possesses a key attribute that enables the assessment of its stability: the covariance matrix is the sole unknown parameter, unlike the optimal portfolio, which necessitates an estimation of risky asset returns' mean, a more challenging task (Merton 1980). Despite its reduced estimation risk, the Minimum Variance portfolio still exhibits some instability. Therefore, we posit that alterations in implied process variance $$ν$$ offer a valuable gauge of stability over time. Our Stability Measure is founded on the notion of portfolio-specific stationarity, determined by tracking the temporal properties of a portfolio's empirical correlation matrix's signal-to-noise ratio.
 
-Graphs with numerous nodes and edges are prevalent in various fields. However, the high complexity of large graphs poses challenges for data storage and processing in research. Lossless compression techniques have become increasingly important to address these issues. Existing research has proposed several theories for edge compression, but most studies primarily focus on edge reduction without adequately addressing shared nodes connecting multiple edges.
+The Stability Measure expands upon the foundational work of Marchenko and Pastur (1967), who derived an analytical form for the probability density function of a random covariance matrix's eigenvalue distribution. This matrix is composed of data elements that are independent, identically distributed random variables originating from a zero-mean process with finite variance. In instances where the data-generating process has unit variance, the covariance and correlation matrices are identical, rendering the Marchenko-Pastur eigenvalue distribution well-suited for calculating $$ν$$.
 
-A novel lossless edge compression rule that permits node overlapping was introduced. We then present algorithms tailored for different graph types to find the compressed graph with the minimum number of edges. Under this rule, the problem of finding the minimum edge compressed graph can be transformed into finding the minimum vertex covering/maximum independent set of the original graph. Although this problem is NP-complete in a general graph, intelligent optimization algorithms, such as the genetic algorithm, can be employed to find approximate solutions.
-
-However, approximate solutions may not be satisfactory when exact results are desired, or the time cost is tolerable. In such cases, we apply a dynamic programming algorithm to accurately determine the minimum edge compression. Our compression technique, which allows for node overlapping, not only reduces edges but also efficiently utilizes information stored in shared nodes. This approach saves storage space and enhances data processing efficiency.
+We demonstrate the effectiveness of the Stability Measure by analyzing historical market data and the corresponding empirical correlation matrix eigenvalue distribution, focusing on the S&P 400, S&P 500, S&P 600, and Russell 1000 from 2002 to 2021. Our findings illustrate the progression of $$ν(t)$$ over time $$Δν(t)$$, identifying periods and disruptions in portfolio-specific stationarity. These results carry implications for the overall effectiveness of portfolio management, methodological ramifications for researchers examining Modern Portfolio Theory, the Efficient Frontier, and estimation errors, as well as practical consequences for managing Minimum Variance index portfolios.
 
 ## Explanation
 
