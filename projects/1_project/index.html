@@ -10,9 +10,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>project 1 | Haoran  Xu</title>
+    <title>Graph Theory | Haoran  Xu</title>
     <meta name="author" content="Haoran  Xu">
-    <meta name="description" content="a project with a background image">
+    <meta name="description" content="Minimum Edge Compression of General Graphs (Allowing edges going into supernodes and nodes being overlapped)">
     <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
 
 
@@ -75,10 +75,10 @@
               </li>
               <!-- Other pages -->
               <li class="nav-item ">
-                <a class="nav-link" href="/cv/">cv</a>
+                <a class="nav-link" href="/projects/">Academic Projects</a>
               </li>
               <li class="nav-item ">
-                <a class="nav-link" href="/projects/">Academic Projects</a>
+                <a class="nav-link" href="/cv/">cv</a>
               </li>
 
               <!-- Toogle theme mode -->
@@ -109,72 +109,25 @@
         <div class="post">
 
           <header class="post-header">
-            <h1 class="post-title">project 1</h1>
-            <p class="post-description">a project with a background image</p>
+            <h1 class="post-title">Graph Theory</h1>
+            <p class="post-description">Minimum Edge Compression of General Graphs (Allowing edges going into supernodes and nodes being overlapped)</p>
           </header>
 
           <article>
-            <p>Every project has a beautiful feature showcase page.
-It’s easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.</p>
+            <h2 id="introduction">Introduction</h2>
 
-<p>To give your project a background in the portfolio page, just add the img tag to the front matter like so:</p>
+<p>Graphs with numerous nodes and edges are prevalent in various fields. However, the high complexity of large graphs poses challenges for data storage and processing in research. Lossless compression techniques have become increasingly important to address these issues. Existing research has proposed several theories for edge compression, but most studies primarily focus on edge reduction without adequately addressing shared nodes connecting multiple edges.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
-layout: page
-title: project
-description: a project with a background image
-img: /assets/img/12.jpg
----
-</code></pre></div></div>
+<p>A novel lossless edge compression rule that permits node overlapping was introduced. We then present algorithms tailored for different graph types to find the compressed graph with the minimum number of edges. Under this rule, the problem of finding the minimum edge compressed graph can be transformed into finding the minimum vertex covering/maximum independent set of the original graph. Although this problem is NP-complete in a general graph, intelligent optimization algorithms, such as the genetic algorithm, can be employed to find approximate solutions.</p>
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
+<p>However, approximate solutions may not be satisfactory when exact results are desired, or the time cost is tolerable. In such cases, we apply a dynamic programming algorithm to accurately determine the minimum edge compression. Our compression technique, which allows for node overlapping, not only reduces edges but also efficiently utilizes information stored in shared nodes. This approach saves storage space and enhances data processing efficiency.</p>
 
-  <picture>
-    
+<h2 id="explanation">Explanation</h2>
 
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/1.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+<p>In this section, some definitions, terms, notations and the compression rule would be expounded.</p>
 
-  </picture>
-
-</figure>
-
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/3.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/5.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
+<h3 id="definition-1">Definition 1</h3>
+<p>Edge <strong>e</strong> is an elements pair on the set of vertex <strong>V</strong>. It could be an ordered pair or an unordered pair, representing a directed edge or an undirected edge respectively. <em>(shown in <strong>Fig.1</strong>)</em></p>
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
         <figure>
@@ -191,37 +144,21 @@ img: /assets/img/12.jpg
 
     </div>
 </div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
+<h3 id="definition-2">Definition 2</h3>
+<p><strong>V</strong> is a finite vertex set and <strong>E</strong> is an edge set defined on <strong>V</strong>, The mathematical structure <strong>G = (V,E)</strong> is a general graph.</p>
 
-<p>You can also put regular text between your rows of images.
-Say you wanted to write a little bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, <em>bled</em> for your project, and then… you reveal its glory in the next row of images.</p>
+<p>Although general graphs contain directed graphs and weighted graphs, in this analysis, we only focus on the simplest model, undirected graphs. And then, the compression rules was introduced:</p>
 
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
+<p><strong>Rule 1</strong>: as <strong>Fig.2</strong> shows, if a series of vertices (\(v_{1},v_{2},...,v_{i}\)) were connected to the same neighbor vertex \(v_{nei}\), these vertices (\(v_{1},v_{2},...,v_{i}\)) would be encapsulated into a block, called <strong>supernode</strong>. And these edges were compressed to a <strong>superedge</strong>.</p>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
         <figure>
 
   <picture>
     
 
     <!-- Fallback to the original file -->
-    <img src="/assets/img/6.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/11.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+    <img src="/assets/img/13.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
 
   </picture>
 
@@ -229,25 +166,279 @@ You describe how you toiled, sweated, <em>bled</em> for your project, and then�
 
     </div>
 </div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
+<h3 id="definition-3">Definition 3</h3>
+<p>A <strong>node</strong> refers to a vertex or a supernode.</p>
+
+<p>In this analysis, the term <strong>node</strong> would be used more frequently than term <strong>vertex</strong>.</p>
+
+<p><strong>Rule 2</strong>: for complete subgraph parts in a general graph, all nodes in the subgraph are encapsulated into a supernode, and all edges are compressed into a self leading edge in the supernode. As <strong>Fig.3</strong> shows.</p>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/14.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+<p><strong>Rule 3</strong>: supernode is also a node and the <strong>Rule 1</strong> is also valid for supernodes. This means that if a supernode \(S_{1}\) containing some nodes (\(a, b,...\)) connected to a series of different nodes (\(v_{1},v_{2},..., v_{i}\)), these nodes would be encapsulated into another supernode \(S_{2}\). Shown in <strong>Fig.4</strong>.</p>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/15.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+<p><strong>Rule 4</strong>: edge was allowed to go into supernodes. This meaned an encapsulated node \(c\) within supernode \(S\) was allowed to connect separately to another node \(d\) (whether \(d\) is inside or outside \(S\)) in the compressed graph, if necessary. As <strong>Fig.5</strong> shows.</p>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/16.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+<p><strong>Rule 5</strong>: If the same node \(a\) was used by more than one supernodes (\(S_{1}, S_{2},...,S_{i}\)), these supernodes were overlapped and the node \(a\) was allowed to be reused. Shown in <strong>Fig.6</strong>.</p>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/17.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
 </div>
 
-<p>The code is simple.
-Just wrap your images with <code class="language-plaintext highlighter-rouge">&lt;div class="col-sm"&gt;</code> and place them inside <code class="language-plaintext highlighter-rouge">&lt;div class="row"&gt;</code> (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/" rel="external nofollow noopener" target="_blank">Bootstrap Grid</a> system).
-To make images responsive, add <code class="language-plaintext highlighter-rouge">img-fluid</code> class to each; for rounded corners and shadows use <code class="language-plaintext highlighter-rouge">rounded</code> and <code class="language-plaintext highlighter-rouge">z-depth-1</code> classes.
-Here’s the code for the last row of images above:</p>
+<h2 id="the-principle-of-algorithm">The principle of algorithm</h2>
+<p>For an undirected and unweighted graph without complete subgraph, the <strong>Rule 2</strong> is not valid. For the remaining four rules, only <strong>Rule 1</strong> and <strong>Rule 3</strong> can cause the change of edge quantity, both compressing edges connected to the common node into a superedge.</p>
 
-<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row justify-content-sm-center"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-8 mt-3 mt-md-0"</span><span class="nt">&gt;</span>
-        {% include figure.html path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    <span class="nt">&lt;/div&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-4 mt-3 mt-md-0"</span><span class="nt">&gt;</span>
-        {% include figure.html path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-</code></pre></div></div>
+<p>By the definition of the covering set, edges (\(e_{S,1},e_{S,2},...,e_{S,i}\)) connected to vetices (\(v_{S,1},v_{S,2},...,v_{S,i}\)) within a vertex covering S, cover all the edges in the original graph \(G(V,E)\): \(E_{v \rightarrow e}(S) = E_{v \rightarrow e}(G)\) Where \(E_{v \rightarrow e}\) is a function from vertice to edges them connecting.</p>
 
+<p>By the <strong>Rule 1</strong>, edges (\(e_{S,1},e_{S,2},...,e_{S,i}\)) connected to vetices (\(v_{S,1},v_{S,2},...,v_{S,i}\)) within a vertex covering \(S\), would be compressed to a superedge repectively, and neighbours of these vetices (\(v_{S,1},v_{S,2},...,v_{S,i}\)) would be compressed into supernodes. Shown in <strong>Fig.7</strong>.</p>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/18.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+<p>In this way, each edge in the original graph would be compressed without omission. And the edges’quantity of the compressed graph, is equal to vertex covering’s elements quantity of the original graph. Therefore, the problem of finding the minimum edge compression was transformed into the problem of finding the minimum vertex covering.</p>
+
+<p><strong>Theorem 1</strong>
+For an undirected, unweighted and connected graph without complete subgraph, the minimum edges’quantity of the compressed graph, is the minimum vertex covering’s elements quantity of the original graph: \(\#(E_{\min}) = \#(S_{\min})\) Where \(\#(E_{\min})\) is the minimum edges’ quantity of the compressed graph and \(\#(S_{\min})\) is the the minimum vertex covering’s elements quantity of the original graph.</p>
+
+<p><strong>Proof.</strong> \(\#(E_{\min}) = \#(S_{\min})\):</p>
+
+<p><strong>Case 1</strong>: suppose that the edges quantity of the compressed graph \(\#\left(E_{\min }\right)=n+k\), is greater than the elements quantity of the original graph’s minimum vertex covering \(\#\left(S_{\min }\right)=n\), where \(n\), \(k\) are positive integers.</p>
+
+<p>In this case, in the compressed graph, $n + k$ edges were connected with \(n\) vertices belong to \(S_{min}\) (Because vertices of \(S_{min}\) cover all edges, there is not any edge whose two ends are not connected to any \(v_{S,i}\)). According to the combination principle, at least \(k\) edges are connected to repeated vertices. This contradicts Rule 3. Hence, the excess \(k\) edges will be further compressed by <strong>Rule 3</strong> until the total number of edges is no longer greater than \(n\). <strong>Case 1</strong> does not hold.</p>
+
+<p><strong>Case 2</strong>: suppose that the edges quantity of the compressed graph \(\#\left(E_{\min }\right)=n-k\), is less than the elements quantity of the original graph’s minimum vertex covering \(\#\left(S_{\min }\right)=n\), where \(n\), \(k\) are positive integers and \(n &gt; k\).</p>
+
+<p>In this case, to keep \(n\) vertices undirected graph connected needs at least \(n-1\) edges, and there is no cycle in such a graph. (It is easily proved by mathematical induction). By the definition of tree, such an acyclic undirected connected graph is also a tree. For a tree structrued by \(v_{i}\), the degree of leaves are \(1\). This is contradicts that \(S_{min}\) is a minimum vertex covering. Because if the degree of a vertex \(a\) is 1, the unique edge connected with \(a\) could be covered by the neighbour of \(a\), the appropriate element of \(S_{min}\) is not \(a\), but its neighbour. <strong>Case 2</strong> does not hold.</p>
+
+<p>As the above, \(\#(E_{\min})\) can not be greater or less than \(\#(S_{\min})\). Hence \(\#(E_{\min})\) can only be equal to \(\#(S_{\min})\).</p>
+
+<p><strong>Proven</strong>.</p>
+
+<h2 id="the-compression-of-tree-graphs">The compression of Tree graphs</h2>
+<h3 id="compression-algorithm">Compression algorithm</h3>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/19.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+<p><strong>lemma 1</strong>
+If \(T\) is a tree and \(v\) is a leaf, and \(u\) is the only point where \(v\) is connected, then there exists Minimum point coverage containing \(u\).</p>
+
+<p><strong>Proof.</strong> Considering minimum vertex covering, \(S\), Let \(e=u-v\) be the only associated edge. Obviously at least one of \(u\) and \(v\) is in \(S\), otherwise \(e\) cannot be covered. If \(u \in S\), then <strong>lemma 1</strong> is true. If \(v \in S\), then we delete \(v\) from \(S\) and insert \(u\) to get another point coverage of the same size.</p>
+
+<p>Since \(u \in S\), then \(S-u\) must be a minimum point cover of \(T-u\), \(v\) (tree \(T\) removes points \(u\), \(v\) and all edges incident to \(u\),\(v\). Then we can calculate the minimum vertex covering of \(T-u\),\(v\). Thus, our <strong>Algorithm 1</strong> holds.</p>
+
+<h3 id="the-analysis-of-time-complexity">The analysis of time complexity</h3>
+<p>A \(n\) vertex tree \(T\) would be input as a \(n \times n\) adjacency matrix.</p>
+
+<p><strong>Step 1</strong>: the matrix was traversed to find all the rows with only one non-zero element. The identifiers of these rows were the identifiers of leaves in the tree. The time complexity of this step was \(O(n^{2})\).</p>
+
+<p><strong>Step 2</strong>: the column identifiers of non-zero element in these leafrows were find. These identifiers were the previous generation of leaves. They were a part of the minimum vertex covering \(S_{min}\). A set \(S_{min}\) was created to store these found identifiers. Then these leaves columns and rows were deleted. Then, in the remaining matrix, these vertices connected to the \(S_{min}\) were found, but them would not be stored in \(S_{min}\). Them were seemed as the new leaves to be processed in a new turn of loop as same as the above, and deleting rows and columns of vertices added into \(S_{min}\) last time (deleting elements in matrix, not in \(S_{min}\)). In this step, because of the loop, the time complexity was \(O(kn^{2})\), where \(k\) is a constant.</p>
+
+<p><strong>Step 3</strong>: when the process reached the root, a special situation, the remaining matrix was \(\left(\begin{array}{ll}0 &amp; 1 \\ 1 &amp; 0\end{array}\right)\), may arise. If it happens, either of the last two points was added to \(S_{min}\) and the other was deleted. If it does not happen, the whole process was continuely completed as <strong>Step 2</strong>. This step has a time complexity of \(O(1)\).</p>
+
+<p>Therefore, the time complexity of the algorithm was the level of \(O(n^{2})\). It could be completed in a polynomial time. An example was shown in <strong>Fig.8</strong>:</p>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/20.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+
+<h2 id="the-compression-of-grid-graphs">The compression of Grid graphs</h2>
+<h3 id="compression-algorithm-1">Compression algorithm</h3>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/21.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+<p>From <strong>theorem 1</strong>, the minimum edges ‘quantity of the compressed graph, is the minimum vertex covering’s elements quantity of the original graph. Therefore, for a grid graph, to find the minimum edge compression is to find the minimum point cover or the maximum independent set.</p>
+
+<p>If \(G\) is a grid and \(u\) is a node which has two edges, and \(v\) is the point where \(u\) is connected, then there must be points on the opposite side that are not connected to \(u\), and there must also be points on the opposite side of these points that are independent of each other, and these points will eventually form the maximum independent set.</p>
+
+<p>Since \(u ∈ N\), then \(N-u\) must be a maximum independent set of \(G-u\),\(v\) (grid \(G\) removes points \(u\), \(v\) and all edges incident to \(u\),\(v\). Then we can calculate the maximum independent set of \(G-u\),\(v\). Thus, our <strong>Algorithm 2</strong> holds.</p>
+
+<h3 id="example-of-reduction">Example of reduction</h3>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/22.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+
+<h3 id="the-analysis-of-time-complexity-1">The analysis of time complexity</h3>
+
+<p>The above algorithm is the way to find the compression of the grid graphs \(G\).</p>
+
+<p><strong>Step 1</strong> <em>Set complementary sets</em>: the sets generated as \($U,V\)$ are maximum independent set and the set of minimum vertex covering. The complementary property of the sets can therefore separate the complete vertexes. The time complexity of this step was \(O(2)\), which can be recorded as \(O(1)\).</p>
+
+<p><strong>Step 2</strong> <em>Input nodes</em>: As shown in the previous proof of the transferable between the grid graph and the general graph, it could be shown that the connection between the vertex can be refer to as edge. Referring to the step of finding \(u\), the symbol is to check if the vertex have and only have to edges. As in the algorithm shows, as we found out \(u\) and \(v\), we then delete the edges linked. The latter work to discover \(u\) and \(v\) is therefore turn out to be the same way referring to find out the vertex with two edges. In the previous analysis of time complexity where used matrix to visualize the connection the tree graph, we could use the same idea here to consider the connection of grid graph.
+As shown in the above figure, the time complexity can be computed as</p>
+
+<p>\(\textbf{time complexity} = O(1*n)+O(2*n)+...++O(k*n)\) where \(k \rightarrow n\).</p>
+
+<p>It could be calculated as</p>
+
+<p>\(\textbf{time complexity}= O(\frac{n(n+1)}{2}n)\).</p>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/23.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+<p>Therefore, the time complexity of this step can be shown as \(O(n^{3})\).</p>
+
+<p><strong>Step 3</strong> <em>Find out minimum</em>: As demonstrated in the previous proof the minimum of the maximum independent set and the set of minimum vertex covering, shown as \(U,V\) here, is equalled to the minimal of edges reduction. In the final step, checked the minimum of the $U,V$. This step the time complexity can be recorded as \(O(1)\).</p>
+
+<p>Therefore, the time complexity of the algorithm was the level of \(O(n^{3})\). It could be completed in a polynomial time.</p>
+
+<h2 id="the-equivalence">The equivalence</h2>
+
+<p>We have found algorithms suitable for compressing different types of graphs to minimum edges. We will now show that finding minimal edge compression in general graphs is the NP- Complete problem, which is equivalent to the problems of finding minimal vertex covers and complete subgraphs in general graphs, both of which are NP-Complete.</p>
+
+<p>The vertex cover problem is known to be a NP-Complete problem, it was one of the 21 NP-complete problems proposed by Karp [1]. It is frequently used as a starting point for NP-hardness proofs in computational complexity theory. For the proof, we could determine whether there is a subset V’ of vertices of size at most k such that every edge in the graph is connected to a vertex in V’, given a graph \(G(V, E)\) and a positive integer \(k\). The goal is to see if \(G\) has a vertex cover with a maximum size of \(k\). Because an NP-Complete problem is defined as one that is both in NP and NP hard, the proof that a problem is NP-Complete could be divided into two parts: First to prove that vertex cover is in NP and second to prove that vertex cover is in NP-Hard. It is stated by K. Biswas and S.A.M. Harun that finding a minimum vertex cover of a graph is NP-Complete [2]. Also, B. Brešar, F. Kardoš, J. Katrenič, and G. Semanišin have demonstrated that the k-Path Vertex Cover Problem is NP-complete for any fixed integer \(k≥ 2\) [3]. However, S. Davis and S. Russell have certified that MIN-VERTEX-COVER is NP-hard, which means that it isn’t even in NP [4].</p>
+
+<p>As for the node-deleted complete subgraph problem, it has already been shown to be NP- complete [1]. This also been reiterated by Krishnamoorthy, M. and Deo, N., when the input graph is limited to be planar, the node-deleted "complete" subgraph problem can be handled in polynomial time [5]. This is based on the fact that for planar graphs, solutions to the maximum clique problem can be found in polynomial time [6].</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In conclusion, for general graphs, excluding node-deleted complete subgraph, under the compression rule that allowed nodes to be overlapped and edges to go into supernodes, finding the lowest number of edges is equivalent to finding the number of the MIN-VERTEX-COVER. As for two specific kinds of graph, tree and grid, excluding node-deleted complete subgraph, we have discussed algorithm 1 and 2 to find their MIN-VERTEX-COVER. Furthermore, the time complexity of these two algorithm has been discussed following. However, the node-deleted complete subgraph problem is NP-complete.</p>
+
+<h2 id="references">References</h2>
+<p>[1] R.M.Karp, Reducibility among Combinatorial Problems, Complexity of Computer Computations, R.E. Miller and J. W. Thatcher, eds., Plenum Press, NY, 1972, pp. 85-104.</p>
+
+<p>[2]K. Biswas and S.A.M. Harun, “Constraint Minimum Vertex Cover in K-Partite Graph Approximation Algorithm and Complexity Analysis”, International Journal of Computer Science and Information Security, vol.4, no.12, 2009</p>
+
+<p>[3]B. Brešar, F. Kardoš, J. Katrenič, and G. Semanišin, “Minimum k-path vertex cover,” Discrete Applied Mathematics, vol. 159, no. 12, pp. 1189–1195, Jul. 2011</p>
+
+<p>[4]S. Davis and S. Russell, “NP-Completeness of Searches for Smallest
+Possible Feature Sets,” AAAI Technical Report FS-94-02, 1994, pp.37-39</p>
+
+<p>[5]Krishnamoorthy, M. and Deo, N., 1979. Node-Deletion NP-Complete Problems
+| SIAM Journal on Computing | Vol. 8, No. 4 | Society for Industrial
+and Applied Mathematics\</p>
+
+<p>[6]S. A. COOK, The complexity of theorem—proving procedures, Proc. of
+Third Annual ACM Symp. on Theory of Computing, 1970, pp. 151-158.</p>
 
           </article>
 
