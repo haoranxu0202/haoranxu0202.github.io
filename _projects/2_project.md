@@ -4,7 +4,7 @@ title: "Edge Compression"
 description: University of Nottingham, School of Computer Science
 img: assets/img/12.jpg
 importance: 2
-category: work
+category: More to be added in the future
 ---
 ## Minimum Edge Compression of General Graphs   (Allowing edges going into supernodes and nodes being overlapped)
 

@@ -4,7 +4,7 @@ title: "Stability Measure for Minimum Variance Portfolios"
 description: Cornell University, School of Operations Research and Information Engineering
 img: assets/img/24.jpg
 importance: 1
-category: work
+category: More to be added in the future
 ---
 ## Stability Measure for MVPs leveraging Marchenko-Pastur Theory and Eigenvalue Distributions
 <div class="row">
