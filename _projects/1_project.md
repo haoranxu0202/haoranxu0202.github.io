@@ -22,188 +22,162 @@ The Stability Measure expands upon the foundational work of Marchenko and Pastur
 
 We demonstrate the effectiveness of the Stability Measure by analyzing historical market data and the corresponding empirical correlation matrix eigenvalue distribution, focusing on the S&P 400, S&P 500, S&P 600, and Russell 1000 from 2002 to 2021. Our findings illustrate the progression of $$ν(t)$$ over time $$Δν(t)$$, identifying periods and disruptions in portfolio-specific stationarity. These results carry implications for the overall effectiveness of portfolio management, methodological ramifications for researchers examining Modern Portfolio Theory, the Efficient Frontier, and estimation errors, as well as practical consequences for managing Minimum Variance index portfolios.
 
-## Explanation
+## Leveraging the Marchenko–Pastur Theorem for Assessing Stability in Portfolio Optimization
 
-In this section, some definitions, terms, notations and the compression rule would be expounded.
+The Marchenko–Pastur theorem can be expressed as follows. Let $$𝑋$$ be a $$𝑇×𝑁$$ random matrix, where each elements $$𝑥_{𝑖𝑗}$$ are independent identically distributed (i.i.d.) random variables drawn from a zero-mean random process with finite variance $$\sigma^2$$. 
 
-### Definition 1
-Edge **e** is an elements pair on the set of vertex **V**. It could be an ordered pair or an unordered pair, representing a directed edge or an undirected edge respectively. *(shown in **Fig.1**)*
+In the limit $$𝑁,𝑇→\infty$$, such that the ratio $$1<𝑞=\frac{T}{N}<\infty$$, matrix $$𝑀=\frac{1}{T} 𝑋^{'} 𝑋$$ has eigenvalues whose distribution converges to the analytic Marchenko–Pastur probability density function:
+
+$$p(\lambda)=\left\{\begin{array}{rr}
+\frac{q \sqrt{\left(\lambda_{+}-\lambda\right)\left(\lambda-\lambda_{-}\right)}}{2 \pi \lambda \sigma^{2}}, & \lambda \in\left[\lambda_{-}, \lambda_{+}\right] \\
+0, & \lambda \in\left[\lambda_{-}, \lambda_{+}\right]
+\end{array}\right.$$
+
+where $$\lambda_{ \pm}=\sigma^{2}(1 \pm \sqrt{q})^{2}$$.
+
+$$T$$ representing a series of consecutive trading days and as $$N$$ representing the number of components in an index portfolio such as the S&P 500. 
+
+#### Marchenko–Pastur eigenvalue probability density function $$p(\lambda)$$
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="assets/img/26.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
-### Definition 2
-**V** is a finite vertex set and **E** is an edge set defined on **V**, The mathematical structure **G = (V,E)** is a general graph.
+<div class="caption">
+(a) Marchenko–Pastur eigenvalue probability density function for 𝜎^2=1 and a range of values of the quality parameter q. 
+(b) as (a) but for fixed 𝑞=1.5 and a range of values of 𝜎^2. 
+</div>
+The figure on the left demonstrates the probability density function for various values of $$q$$ with a fixed $$σ^2=1$$. As $$q$$ approaches a larger value, the eigenvalue distribution becomes increasingly narrow, as depicted in the image, which corresponds to a distribution where all eigenvalues are $$1$$. In the context of population dynamics, this is equivalent to the correlation matrix converging towards the identity matrix. Referring to the left figure, $$q$$ ($$=T/N$$) is adjusted by altering $$T$$, while keeping $$N$$ constant. In the analysis of actual stock data, unless specified otherwise, $$q = 1.5$$ will be employed. The figure on the right illustrates the impact of modifying the process variance with a fixed $$q = 1.5$$.
 
-Although general graphs contain directed graphs and weighted graphs, in this analysis, we only focus on the simplest model, undirected graphs. And then, the compression rules was introduced:
+#### Separate eigenvalues for ‘signal’ from those for ‘noise’
+The Marchenko–Pastur is a good fit for the distribution of those eigenvalues associated with noise, distinct from those associated with signal. It facilitates a threshold separation between those eigenvalues associated with noise and those associated with signal:
 
-**Rule 1**: as **Fig.2** shows, if a series of vertices ($$v_{1},v_{2},...,v_{i}$$) were connected to the same neighbor vertex $$v_{nei}$$, these vertices ($$v_{1},v_{2},...,v_{i}$$) would be encapsulated into a block, called **supernode**. And these edges were compressed to a **superedge**.
+$$\lambda_{-}<\lambda<\lambda_{+}$$ where $$\lambda_{ \pm}=\sigma^{2}(1 \pm \sqrt{q})^{2}$$
+
+Eigenvalues that fall outside this range can be considered as signal eigenvalues, while those inside the range are associated with noise. Financial data matrices generally have very low signal-to-noise ratios rendering them potentially suitable for comparison with Marchenko–Pastur derived matrices.
+
+Apply this threshold to empirical data:
+1. Standardize the $$𝑇×𝑁$$ empirical data so that each column of the data matrix has zero mean and unit variance.
+2. Perform eigen-decomposition on the column-standardized empirical data matrix.
+3. Apply a a Gaussian kernel density fit to those eigenvalues that lie within the Marchenko–Pastur boundaries for noise, i.e., $$\lambda_{-}<\lambda<\lambda_{+}$$ where $$\lambda_{ \pm}=\sigma^{2}(1 \pm \sqrt{q})^{2}$$
+4. Fit with the analytic Marchenko-Pastur probability density function (the benchmark) to get the the implied process variance $$𝜈=𝜎_{𝑜𝑝𝑡}^2$$ by minimises the distance between the analytic pdf and the empirical KDE.
+
+#### M–P pdf vs. Gaussian KDE to simulated random data with no signal 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/13.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="assets/img/27.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
-### Definition 3
-A **node** refers to a vertex or a supernode.
+In the case of random data devoid of any signal, as illustrated in the above left and right figures, the optimization occurs for $$σ_{opt}^2=1$$. This is expected since we are dealing with purely random (no signal) data generated from a stationary zero-mean parent process with unit variance (in the case of Gaussian and Uniform generated data). The left figure displays the results of generating data ($$N = 500$$, $$T = 750$$, thus $$q = 1.5$$) from four distinct probability distributions: a standard normal distribution; a uniform distribution with zero mean and unit variance, a Cauchy distribution centered at zero with $$\lambda = 1$$, and a $$t$$-distribution with one degree of freedom. The latter two serve as examples of distributions exhibiting heavier tails than Gaussian processes. The primary distinction between the left and right figures lies in the increase of $$q$$ to $$5$$ in the right figure. 
 
-In this analysis, the term **node** would be used more frequently than term **vertex**.
+A notable observation from the left figure, i.e., for $$q = 1.5$$, is that the process appears considerably more agnostic to the source data-generating process. As we transition to the right figure with $$q = 5$$, it becomes evident that the process is not suitable for Cauchy and t-distribution sourced data. This informs the selection of q when working with market data and offers the added benefit of simplifying the calibration of our stability management system. It is crucial to note that values of $$q ≈ 1$$ may yield erroneous behavior, but $$q = 1.5$$ generates robust results while enabling us to capitalize on practical design advantages.
 
-**Rule 2**: for complete subgraph parts in a general graph, all nodes in the subgraph are encapsulated into a supernode, and all edges are compressed into a self leading edge in the supernode. As **Fig.3** shows.
+## Simulate Random data (with signal) 
+Aim: Generate a correlation matrix for data containing both noise and signal to simulate the actual market data behavior.
+
+1.Generate a $$𝑁×𝑓$$ factor matrix $$𝐹$$ with elements from a standard Gaussian distribution: 
+
+$$𝐹_{𝑖𝑗}∼𝑁(0,1)$$, where $$𝑖=1,2,...,𝑁$$; $$j=1,2,...,𝑓$$. $$𝑓$$ is the number of channels (we may think of channels as factors) into which we wish to inject the signal and 𝑁 is the number of assets ($$𝑓<𝑁$$). 
+2.Generate a covariance matrix $$𝐹𝐹^{'}$$, where $$𝐹^{'}$$ is the the transpose of $$𝐹$$.
+
+3.Generate a $$𝑁×𝑁$$ diagonal matrix $$𝐷$$ with elements from a Uniform distribution: $$𝐷_{𝑖𝑖}∼𝑈(0,1)$$, for $$𝑖=1,2,...,𝑁$$.
+
+4.Generate the $$𝑁×𝑁$$ signal matrix $$𝑆$$ (full-rank): $$𝑆=𝐹𝐹^{'}+𝐷$$.
+
+5.Generate a random covariance matrix $$𝑄$$ (populated from standard Gaussian).
+
+6.Generate the noise-with-signal-embedded covariance matrix $$R$$ : $$𝑅=\alpha𝑄+(1−\alpha)𝑆$$, we use a very weak signal to simulate financial data by setting $$\alpha=0.995$$.
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/14.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="assets/img/28.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
-**Rule 3**: supernode is also a node and the **Rule 1** is also valid for supernodes. This means that if a supernode $$S_{1}$$ containing some nodes ($$a, b,...$$) connected to a series of different nodes ($$v_{1},v_{2},..., v_{i}$$), these nodes would be encapsulated into another supernode $$S_{2}$$. Shown in **Fig.4**.
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/15.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-**Rule 4**: edge was allowed to go into supernodes. This meaned an encapsulated node $$c$$ within supernode $$S$$ was allowed to connect separately to another node $$d$$ (whether $$d$$ is inside or outside $$S$$) in the compressed graph, if necessary. As **Fig.5** shows.
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/16.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-**Rule 5**: If the same node $$a$$ was used by more than one supernodes ($$S_{1}, S_{2},...,S_{i}$$), these supernodes were overlapped and the node $$a$$ was allowed to be reused. Shown in **Fig.6**.
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/17.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
+<div class="caption">
+Simulation under the case where the signal has been injected into 10% of the channels (𝑓 is 10% of 𝑁) i.e., 𝑁=300, 𝑓=30, we use a very weak signal by seting 𝛼=0.995. Also, 𝑞 is set to be 1.5.
 </div>
 
-## The principle of algorithm 
-For an undirected and unweighted graph without complete subgraph, the **Rule 2** is not valid. For the remaining four rules, only **Rule 1** and **Rule 3** can cause the change of edge quantity, both compressing edges connected to the common node into a superedge.
-
-By the definition of the covering set, edges ($$e_{S,1},e_{S,2},...,e_{S,i}$$) connected to vetices ($$v_{S,1},v_{S,2},...,v_{S,i}$$) within a vertex covering S, cover all the edges in the original graph $$G(V,E)$$: $$E_{v \rightarrow e}(S) = E_{v \rightarrow e}(G)$$ Where $$E_{v \rightarrow e}$$ is a function from vertice to edges them connecting.
-
-By the **Rule 1**, edges ($$e_{S,1},e_{S,2},...,e_{S,i}$$) connected to vetices ($$v_{S,1},v_{S,2},...,v_{S,i}$$) within a vertex covering $$S$$, would be compressed to a superedge repectively, and neighbours of these vetices ($$v_{S,1},v_{S,2},...,v_{S,i}$$) would be compressed into supernodes. Shown in **Fig.7**.
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/18.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="assets/img/29.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
-In this way, each edge in the original graph would be compressed without omission. And the edges'quantity of the compressed graph, is equal to vertex covering's elements quantity of the original graph. Therefore, the problem of finding the minimum edge compression was transformed into the problem of finding the minimum vertex covering.
-
-**Theorem 1**
-For an undirected, unweighted and connected graph without complete subgraph, the minimum edges'quantity of the compressed graph, is the minimum vertex covering's elements quantity of the original graph: $$\#(E_{\min}) = \#(S_{\min})$$ Where $$\#(E_{\min})$$ is the minimum edges' quantity of the compressed graph and $$\#(S_{\min})$$ is the the minimum vertex covering's elements quantity of the original graph.
-
-**Proof.** $$\#(E_{\min}) = \#(S_{\min})$$:
-
-**Case 1**: suppose that the edges quantity of the compressed graph $$\#\left(E_{\min }\right)=n+k$$, is greater than the elements quantity of the original graph's minimum vertex covering $$\#\left(S_{\min }\right)=n$$, where $$n$$, $$k$$ are positive integers.
-
-In this case, in the compressed graph, $n + k$ edges were connected with $$n$$ vertices belong to $$S_{min}$$ (Because vertices of $$S_{min}$$ cover all edges, there is not any edge whose two ends are not connected to any $$v_{S,i}$$). According to the combination principle, at least $$k$$ edges are connected to repeated vertices. This contradicts Rule 3. Hence, the excess $$k$$ edges will be further compressed by **Rule 3** until the total number of edges is no longer greater than $$n$$. **Case 1** does not hold.
-
-**Case 2**: suppose that the edges quantity of the compressed graph $$\#\left(E_{\min }\right)=n-k$$, is less than the elements quantity of the original graph's minimum vertex covering $$\#\left(S_{\min }\right)=n$$, where $$n$$, $$k$$ are positive integers and $$n > k$$.
-
-In this case, to keep $$n$$ vertices undirected graph connected needs at least $$n-1$$ edges, and there is no cycle in such a graph. (It is easily proved by mathematical induction). By the definition of tree, such an acyclic undirected connected graph is also a tree. For a tree structrued by $$v_{i}$$, the degree of leaves are $$1$$. This is contradicts that $$S_{min}$$ is a minimum vertex covering. Because if the degree of a vertex $$a$$ is 1, the unique edge connected with $$a$$ could be covered by the neighbour of $$a$$, the appropriate element of $$S_{min}$$ is not $$a$$, but its neighbour. **Case 2** does not hold.
-
-As the above, $$\#(E_{\min})$$ can not be greater or less than $$\#(S_{\min})$$. Hence $$\#(E_{\min})$$ can only be equal to $$\#(S_{\min})$$.
-
-**Proven**.
-
-## The compression of Tree graphs
-### Compression algorithm
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/19.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-**lemma 1**
-If $$T$$ is a tree and $$v$$ is a leaf, and $$u$$ is the only point where $$v$$ is connected, then there exists Minimum point coverage containing $$u$$.
-
-**Proof.** Considering minimum vertex covering, $$S$$, Let $$e=u-v$$ be the only associated edge. Obviously at least one of $$u$$ and $$v$$ is in $$S$$, otherwise $$e$$ cannot be covered. If $$u \in S$$, then **lemma 1** is true. If $$v \in S$$, then we delete $$v$$ from $$S$$ and insert $$u$$ to get another point coverage of the same size.
-
-Since $$u \in S$$, then $$S-u$$ must be a minimum point cover of $$T-u$$, $$v$$ (tree $$T$$ removes points $$u$$, $$v$$ and all edges incident to $$u$$,$$v$$. Then we can calculate the minimum vertex covering of $$T-u$$,$$v$$. Thus, our **Algorithm 1** holds.
-
-### The analysis of time complexity
-A $$n$$ vertex tree $$T$$ would be input as a $$n \times n$$ adjacency matrix.
-
-**Step 1**: the matrix was traversed to find all the rows with only one non-zero element. The identifiers of these rows were the identifiers of leaves in the tree. The time complexity of this step was $$O(n^{2})$$.
-
-**Step 2**: the column identifiers of non-zero element in these leafrows were find. These identifiers were the previous generation of leaves. They were a part of the minimum vertex covering $$S_{min}$$. A set $$S_{min}$$ was created to store these found identifiers. Then these leaves columns and rows were deleted. Then, in the remaining matrix, these vertices connected to the $$S_{min}$$ were found, but them would not be stored in $$S_{min}$$. Them were seemed as the new leaves to be processed in a new turn of loop as same as the above, and deleting rows and columns of vertices added into $$S_{min}$$ last time (deleting elements in matrix, not in $$S_{min}$$). In this step, because of the loop, the time complexity was $$O(kn^{2})$$, where $$k$$ is a constant.
-
-**Step 3**: when the process reached the root, a special situation, the remaining matrix was $$\left(\begin{array}{ll}0 & 1 \\ 1 & 0\end{array}\right)$$, may arise. If it happens, either of the last two points was added to $$S_{min}$$ and the other was deleted. If it does not happen, the whole process was continuely completed as **Step 2**. This step has a time complexity of $$O(1)$$.
-
-Therefore, the time complexity of the algorithm was the level of $$O(n^{2})$$. It could be completed in a polynomial time. An example was shown in **Fig.8**:
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/20.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
+<div class="caption">
+Simulation under the case where the signal has been injected into 20% of the channels (𝑓 is 20% of 𝑁) i.e., 𝑁=300, 𝑓=60, we use a very weak signal by seting 𝛼=0.995. Also, 𝑞 is set to be 1.5.
 </div>
 
-## The compression of Grid graphs
-### Compression algorithm
+#### KDE of the eigenvalue distribution of covariance matrix $$R$$
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/21.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="assets/img/30.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
-From **theorem 1**, the minimum edges 'quantity of the compressed graph, is the minimum vertex covering's elements quantity of the original graph. Therefore, for a grid graph, to find the minimum edge compression is to find the minimum point cover or the maximum independent set.
+The figure on the left demonstrates the outcome of applying the Kernel Density Estimation (KDE) to the discrete eigenvalue distribution of the corresponding correlation matrix, in cases where the signal has been incorporated into 10% of the channels ($$f$$ is 10% of $$N$$). The distribution exhibits a distinctive pattern, consisting of a bulk of eigenvalues separated from a series of discrete eigenvalues representing the signal introduced as factors at the beginning of the process. The figure on the right presents the eigenvalue distribution for a case analogous to the one in the left figure, with the exception that noise has been incorporated into 20% of the channels.
 
-If $$G$$ is a grid and $$u$$ is a node which has two edges, and $$v$$ is the point where $$u$$ is connected, then there must be points on the opposite side that are not connected to $$u$$, and there must also be points on the opposite side of these points that are independent of each other, and these points will eventually form the maximum independent set.
+The figure on the left yields a value of $$ν = σ_{opt}^2 = 0.675$$, which can be interpreted as a measure of the signal-to-noise ratio in the original data. A lower value indicates a higher signal-to-noise ratio in the dataset. The value of $$ν$$ is bounded above by $$1$$, as the optimization is performed relative to purely random noise generated by a zero-mean, unit variance process. An optimization resulting in a value of $$ν = 1$$ would essentially signify that the observed data contains no signal and is purely noise. In the case of the figure on the right, the increased signal levels produce a lower optimum parameter value of $$ν = σ_{opt}^2 = 0.504$$, in line with the higher signal-to-noise ratio.
 
-Since $$u ∈ N$$, then $$N-u$$ must be a maximum independent set of $$G-u$$,$$v$$ (grid $$G$$ removes points $$u$$, $$v$$ and all edges incident to $$u$$,$$v$$. Then we can calculate the maximum independent set of $$G-u$$,$$v$$. Thus, our **Algorithm 2** holds.
+## Stationarity
+Suppose the underlying data-generating process is Gaussian $$N(\mu,\sigma^2)$$. When we refer to a period of stationarity, we mean that this process remains the underlying data generating process throughout that period of time, with fixed $$\mu$$ and fixed $$\sigma^2$$.
 
-### Example of reduction
+Identifying breaks in stationarity is crucial, as any statistical analysis across non-stationary periods may be inaccurate. Detecting these breaks allows for improved predictive model efficacy by mitigating potential negative impacts.
+
+Our Stability Measure is therefore based on the concept of portfolio-specific stationarity, and determined by monitoring the temporal properties of the signal-to-noise ratio of a portfolio’s empirical correlation matrix, i.e. $$\Delta𝜈(𝑡)$$. It has implication in measuring of stability for the Minimum Variance portfolio over time and thereby helping researchers measure changes to estimation risk and manage rebalancing regimes.
+
+Smyth and Broby (2022) argue that a period of stationarity is typified by a distribution of $\Delta𝜈(𝑡)$ centred on zero and having a spread of typically ±5%.
+
+#### Periods of stationarity and breaks in stationarity over historical time 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/22.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="assets/img/31.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+The manifestation of stationarity is illustrated in Figure (a) on the right, where clear fluctuations (sampling effects) are observed. However, these fluctuations are confined within a consistent vertical band, indicative of stationarity and exhibiting a bandwidth typical of this specific scenario ($$N(0, 1)$$ and $$q = 1.5$$). Similar effects are displayed in the other frames of the right figure for various known distributions. This connection between our stability measure and stationarity is vital. Stationarity, or its disruptions, materialize through the magnitude of fluctuations in $$ν(t)$$. Figure (a-d) on the right demonstrates examples of behavior for defined statistical processes, which are stationary over the entire time period. In contrast, Figure (a-d) on the left illustrates empirical financial data.
+
+To offer an overview that enables a comparison between actual market data analysis and simulated data from known stationary processes, we include Figure (a-d) on both the left and the right. Each frame depicts the weekly percentage change in $$ν$$. The left figure represents the backtest outcomes for four market indices, while the right figure shows simulations using known stationary processes. The most evident distinction between the figures is the pulsing behavior observed over time for the market data in the left figure. This pulsing effect, entirely absent in the perpetually stationary processes of the right figure, conveys periods of stationarity and breaks in stationarity over time.
+
+## Stability measure with the actual market data
+Note:
+- The methodology relies on the correlation matrix and its eigen-decomposition, without referencing portfolio weights.
+- We do not employ the correlation matrix of one index portfolio to predict the stability of another index portfolio's Minimum Variance portfolio. 
+- A short stability monitoring window of one week, or the weekly percentage change in $$𝝂$$, is adopted for our analysis.
+- The results are valid for the correlations that exist and evolve solely within the core subset of stocks consistently present throughout the 2002–2021 period. In the case of the S&P 500, this corresponds to 389 stocks.
+- A step size of one day is utilized as the monitoring frequency for the rolling window when analyzing daily returns data.
+- The parameter $$𝑞$$ is set to 1.5 in our study.
+
+#### Stability measure $$𝛎(𝐭)$$ from 2006 to 2021
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/32.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 
-### The analysis of time complexity
+Figure on the left demonstrates the evolution of $$ν$$ (the signal-to-noise ratio of the empirical correlation matrix) over time for the S&P 400, 500, 600, and the Russell 1000 indices during the period from the beginning of 2006 to the end of 2021. This figure exhibits several intriguing features. There are noticeable similarities and differences across indices. As highlighted earlier, the significant events of 2008 and 2020 are clearly discernible across all indices, evidenced by substantial, almost instantaneous changes in $$ν$$.
 
-The above algorithm is the way to find the compression of the grid graphs $$G$$.
+Figure on the right illustrates the distribution of $$ν$$ for each index under consideration over the same time period as in Figure on the left. This image is characterized by discrete poles around which a spread of values is observed. Each pole signifies the central value of a period of stationarity, and thus, Minimum Variance portfolio stability. Conversely, transitions between poles indicate breaks in stationarity.
 
-**Step 1** *Set complementary sets*: the sets generated as $$$U,V$$$ are maximum independent set and the set of minimum vertex covering. The complementary property of the sets can therefore separate the complete vertexes. The time complexity of this step was $$O(2)$$, which can be recorded as $$O(1)$$.
-
-**Step 2** *Input nodes*: As shown in the previous proof of the transferable between the grid graph and the general graph, it could be shown that the connection between the vertex can be refer to as edge. Referring to the step of finding $$u$$, the symbol is to check if the vertex have and only have to edges. As in the algorithm shows, as we found out $$u$$ and $$v$$, we then delete the edges linked. The latter work to discover $$u$$ and $$v$$ is therefore turn out to be the same way referring to find out the vertex with two edges. In the previous analysis of time complexity where used matrix to visualize the connection the tree graph, we could use the same idea here to consider the connection of grid graph.
-As shown in the above figure, the time complexity can be computed as
-
-$$\textbf{time complexity} = O(1*n)+O(2*n)+...++O(k*n)$$ where $$k \rightarrow n$$.
-
-It could be calculated as
-
-$$\textbf{time complexity}= O(\frac{n(n+1)}{2}n)$$.
+#### Distribution of $$𝚫𝛎(𝐭)$$ with the S&P 400 index
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/23.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="assets/img/33.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
-Therefore, the time complexity of this step can be shown as $$O(n^{3})$$.
+Figure on the left provides a more detailed view by focusing on the S&P 400 index and selecting three regions of stationarity. Color-coding is employed to link the periods from the left to the right frames. It is instructive to examine the changes in $$ν$$ during each of the periods identified in this image.
 
-**Step 3** *Find out minimum*: As demonstrated in the previous proof the minimum of the maximum independent set and the set of minimum vertex covering, shown as $$U,V$$ here, is equalled to the minimal of edges reduction. In the final step, checked the minimum of the $U,V$. This step the time complexity can be recorded as $$O(1)$$.
-
-Therefore, the time complexity of the algorithm was the level of $$O(n^{3})$$. It could be completed in a polynomial time.
-
-## The equivalence
-
-We have found algorithms suitable for compressing different types of graphs to minimum edges. We will now show that finding minimal edge compression in general graphs is the NP- Complete problem, which is equivalent to the problems of finding minimal vertex covers and complete subgraphs in general graphs, both of which are NP-Complete.
-
-The vertex cover problem is known to be a NP-Complete problem, it was one of the 21 NP-complete problems proposed by Karp \[1\]. It is frequently used as a starting point for NP-hardness proofs in computational complexity theory. For the proof, we could determine whether there is a subset V' of vertices of size at most k such that every edge in the graph is connected to a vertex in V', given a graph $$G(V, E)$$ and a positive integer $$k$$. The goal is to see if $$G$$ has a vertex cover with a maximum size of $$k$$. Because an NP-Complete problem is defined as one that is both in NP and NP hard, the proof that a problem is NP-Complete could be divided into two parts: First to prove that vertex cover is in NP and second to prove that vertex cover is in NP-Hard. It is stated by K. Biswas and S.A.M. Harun that finding a minimum vertex cover of a graph is NP-Complete \[2\]. Also, B. Brešar, F. Kardoš, J. Katrenič, and G. Semanišin have demonstrated that the k-Path Vertex Cover Problem is NP-complete for any fixed integer $$k≥ 2$$ \[3\]. However, S. Davis and S. Russell have certified that MIN-VERTEX-COVER is NP-hard, which means that it isn't even in NP \[4\].
-
-As for the node-deleted complete subgraph problem, it has already been shown to be NP- complete \[1\]. This also been reiterated by Krishnamoorthy, M. and Deo, N., when the input graph is limited to be planar, the node-deleted \"complete\" subgraph problem can be handled in polynomial time \[5\]. This is based on the fact that for planar graphs, solutions to the maximum clique problem can be found in polynomial time \[6\].
+To this end, Figure on the right displays the distribution of the weekly percentage change in ν. For each of the regions identified as periods of stationarity, the modal weekly change is predominantly zero. Moreover, in each of these regions, the range of values is confined within ±4% (the green zone has a single anomalous daily value that can be identified as the spike in Figure on the left, causing the scale on the x-axis to broaden). The fourth frame of Figure on the right contains the distribution of values for all other regions combined. The mean weekly percentage change for all other regions is still zero, albeit less overwhelmingly so. Indeed, excluding the spike at zero for each frame results in values for the mean and variance of the distributions shown, which are twice as large for all other regions as for any of the color-coded regions, whose first and second moments are quite similar.
 
 ## Conclusion
 
-In conclusion, for general graphs, excluding node-deleted complete subgraph, under the compression rule that allowed nodes to be overlapped and edges to go into supernodes, finding the lowest number of edges is equivalent to finding the number of the MIN-VERTEX-COVER. As for two specific kinds of graph, tree and grid, excluding node-deleted complete subgraph, we have discussed algorithm 1 and 2 to find their MIN-VERTEX-COVER. Furthermore, the time complexity of these two algorithm has been discussed following. However, the node-deleted complete subgraph problem is NP-complete.
+We have introduced a mechanism for assessing the stability of the Minimum Variance portfolio on the efficient frontier, which we refer to as the Stability Measure. This measure is grounded in Marchenko–Pastur theory and focuses on the distribution of eigenvalues associated with noise, as opposed to those related to the signal. The Stability Measure emerges as a result of an optimization process that aims to maximize the similarity between the discrete distribution of noise-related eigenvalues in an empirical correlation matrix and a benchmark analytic Marchenko–Pastur probability density function.
+
+We apply the Stability Measure to several Minimum Variance portfolios derived from key US equity indices. Our primary finding reveals that the stability of a Minimum Variance index portfolio can be determined through the empirical correlation matrix of the core stocks comprising that specific index. In this context, portfolio stability can be considered analogous to stationarity in a portfolio-specific data-generating process. The ability to effectively monitor stability for a core subset of stocks enables implementation at higher frequencies than typically associated with rebalancing. By detecting changes in portfolio stability or identifying breaks in the stationarity of a portfolio-specific data-generating process, our stability monitoring approach can serve as an indicator for the need to adjust the rebalancing schedule.
 
 ## References
-\[1\] R.M.Karp, Reducibility among Combinatorial Problems, Complexity of Computer Computations, R.E. Miller and J. W. Thatcher, eds., Plenum Press, NY, 1972, pp. 85-104.
 
-\[2\]K. Biswas and S.A.M. Harun, "Constraint Minimum Vertex Cover in K-Partite Graph Approximation Algorithm and Complexity Analysis", International Journal of Computer Science and Information Security, vol.4, no.12, 2009
+- Chopra, V.K. and Ziemba, W.T., The effect of errors in means, variances, and covariances on optimal portfolio choice. In Hand- book of the Fundamentals of Financial Decision Making: Part I, edited by W. Y. Ziemba, pp. 365–373, 2013 (World Scientific Publishing).
 
-\[3\]B. Brešar, F. Kardoš, J. Katrenič, and G. Semanišin, "Minimum k-path vertex cover," Discrete Applied Mathematics, vol. 159, no. 12, pp. 1189--1195, Jul. 2011
+- Haugen, R.A. and Baker, N.L., The efficient market inefficiency of capitalization–weighted stock portfolios. J. Portf. Manag., 1991, 17(3), 35–40.
 
-\[4\]S. Davis and S. Russell, "NP-Completeness of Searches for Smallest
-Possible Feature Sets," AAAI Technical Report FS-94-02, 1994, pp.37-39
+- Klein, R.W. and Bawa, V.S., The effect of estimation risk on optimal portfolio choice. J. Financ. Econ., 1976, 3(3), 215–231
 
-\[5\]Krishnamoorthy, M. and Deo, N., 1979. Node-Deletion NP-Complete Problems
-\| SIAM Journal on Computing \| Vol. 8, No. 4 \| Society for Industrial
-and Applied Mathematics\
+- Marchenko, V.A. and Pastur, L.A., Distribution of eigenvalues for some sets of random matrices. Math. USSR-Sbornik, 1967, 1(4), 457–483.
 
-\[6\]S. A. COOK, The complexity of theorem---proving procedures, Proc. of
-Third Annual ACM Symp. on Theory of Computing, 1970, pp. 151-158.
+- Merton, R.C., On estimating the expected return on the market: An exploratory investigation. J. Financ. Econ., 1980, 8(4), 323– 361.

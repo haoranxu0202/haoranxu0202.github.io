@@ -18,9 +18,9 @@ latest_posts: false  # includes a list of the newest posts
 selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
-I am currently pursuing my [Master of Financial Engineering](https://www.orie.cornell.edu/orie/cfem) at Cornell University. Before joining Cornell, I obtained a Bachelor of Science with Honours in Statistics from the University of Nottingham, where I received First Class Honors and was a recipient of The Dean's Scholarships.
+I am currently pursuing my [Master of Financial Engineering](https://www.orie.cornell.edu/orie/cfem) at Cornell University. Before joining Cornell, I obtained a Bachelor of Science with Honours in Statistics from the University of Nottingham, where I received First Class Honors and was the recipient of Dean's Scholarships.
 
-My academic background includes coursework in optimization, time series analysis, statistical inference, applied statistical modeling, and machine learning, among other subjects. I am proficient in Python, R, SQL, MATLAB, Excel VBA, LaTeX/Markdown. I hold FRM Level 1 certification and am CFA Level 1 candidate.
+My academic coursework includes optimization, time series analysis, statistical inference, applied statistical modeling, and machine learning, among other subjects. I am proficient in Python, R, SQL, MATLAB, Excel VBA, LaTeX/Markdown. I hold FRM Level I certification and am CFA Level I candidate.
 
 Throughout my academic journey, I have accumulated valuable experience in quantitative finance through internships at various companies. I have also participated in several research projects, such as the Stability Measure for MVPs leveraging Marchenko-Pastur Theory & Eigenvalue Distributions at Cornell University and the Edge Compression of General Graphs at the University of Nottingham. My interest is focused on developing innovative algorithms and practical solutions for challenges in financial engineering and data analysis.
 
