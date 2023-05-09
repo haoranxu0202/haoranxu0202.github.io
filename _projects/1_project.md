@@ -62,6 +62,31 @@ Apply this threshold to empirical data:
 3. Apply a a Gaussian kernel density fit to those eigenvalues that lie within the Marchenko–Pastur boundaries for noise, i.e., $$\lambda_{-}<\lambda<\lambda_{+}$$ where $$\lambda_{ \pm}=\sigma^{2}(1 \pm \sqrt{q})^{2}$$
 4. Fit with the analytic Marchenko-Pastur probability density function (the benchmark) to get the the implied process variance $$𝜈=𝜎_{𝑜𝑝𝑡}^2$$ by minimises the distance between the analytic pdf and the empirical KDE.
 
+#### Optimization over the M-P process variance parameter $$𝝈^𝟐$$
+Objective function (to minimize):
+
+$$L\left(\sigma^{2}\right)=\sum_{i=1}^{N}\left(f_{M P}\left(x_{i}, \sigma^{2}\right)-\hat{f}_{K D E}\left(x_{i}\right)\right)^{2}$$
+
+Gradient descent algorithm:
+
+1.Define the objective function as above
+
+2.Choose an initial value for $$𝜎^2$$ and learning rate $$𝜂$$.
+
+3.Compute the gradient of the objective function using numerical methods such as the central difference approximation: 
+
+$$\nabla L\left(\sigma^{2}\right)=\frac{\partial L}{\partial \sigma^{2}} \approx \frac{L\left(\sigma^{2}+h\right)-L\left(\sigma^{2}-h\right)}{2 h}$$, where $$h$$ is a small positive value, e.g., $$h=10^{−5}$$.
+
+4.Update the parameter value iteratively: $$𝜎_(𝑘+1)^2=𝜎_𝑘^2−𝜂∇𝐿(𝜎_0^2)$$
+
+5.Check for convergence. Otherwise, return to step 3.
+
+6.Report the optimal value $$𝝈_{𝒐𝒑𝒕}^𝟐$$
+
+$$𝝈_{𝒐𝒑𝒕}^𝟐$$ could be interpreted as the implied variance 𝝂 of the data-generating process for the stock components comprising the portfolio. It tells us the equivalent M–P process variance value which would produce the closest possible theoretical distribution to our empirical distribution.
+
+
+
 #### M–P pdf vs. Gaussian KDE to simulated random data with no signal 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
