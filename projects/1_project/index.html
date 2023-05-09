@@ -194,6 +194,29 @@
   <li>Fit with the analytic Marchenko-Pastur probability density function (the benchmark) to get the the implied process variance \(𝜈=𝜎_{𝑜𝑝𝑡}^2\) by minimises the distance between the analytic pdf and the empirical KDE.</li>
 </ol>
 
+<h4 id="optimization-over-the-m-p-process-variance-parameter-𝝈𝟐">Optimization over the M-P process variance parameter \(𝝈^𝟐\)</h4>
+<p>Objective function (to minimize):</p>
+
+\[L\left(\sigma^{2}\right)=\sum_{i=1}^{N}\left(f_{M P}\left(x_{i}, \sigma^{2}\right)-\hat{f}_{K D E}\left(x_{i}\right)\right)^{2}\]
+
+<p>Gradient descent algorithm:</p>
+
+<p>1.Define the objective function as above</p>
+
+<p>2.Choose an initial value for \(𝜎^2\) and learning rate \(𝜂\).</p>
+
+<p>3.Compute the gradient of the objective function using numerical methods such as the central difference approximation:</p>
+
+<p>\(\nabla L\left(\sigma^{2}\right)=\frac{\partial L}{\partial \sigma^{2}} \approx \frac{L\left(\sigma^{2}+h\right)-L\left(\sigma^{2}-h\right)}{2 h}\), where \(h\) is a small positive value, e.g., \(h=10^{−5}\).</p>
+
+<p>4.Update the parameter value iteratively: \(𝜎_(𝑘+1)^2=𝜎_𝑘^2−𝜂∇𝐿(𝜎_0^2)\)</p>
+
+<p>5.Check for convergence. Otherwise, return to step 3.</p>
+
+<p>6.Report the optimal value \(𝝈_{𝒐𝒑𝒕}^𝟐\)</p>
+
+<p>\(𝝈_{𝒐𝒑𝒕}^𝟐\) could be interpreted as the implied variance 𝝂 of the data-generating process for the stock components comprising the portfolio. It tells us the equivalent M–P process variance value which would produce the closest possible theoretical distribution to our empirical distribution.</p>
+
 <h4 id="mp-pdf-vs-gaussian-kde-to-simulated-random-data-with-no-signal">M–P pdf vs. Gaussian KDE to simulated random data with no signal</h4>
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
